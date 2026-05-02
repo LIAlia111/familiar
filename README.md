@@ -27,6 +27,10 @@ Other Claude Code pet projects either require [Kitty graphics protocol](https://
 - Node.js 18+
 - Any modern terminal with 24-bit ANSI color support
 
+### Mobile (Termius / iSH / etc.)
+
+The statusline and proactive hooks work great on mobile SSH clients like Termius. The `/pet` large pixel art is best viewed on desktop or in landscape mode — phones in portrait will compress or wrap the 32-column sprite. Statusline-only experience is fine on any screen size.
+
 ## Commands
 
 | Command | What it does |
