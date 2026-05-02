@@ -13,12 +13,19 @@ describe("pet registry", () => {
     expect(k?.species).toBe("capybara");
   });
 
-  it("lists all available species (free tier = cat + capybara)", () => {
-    const list = listAvailable();
+  it("lists free species when sponsor not unlocked", () => {
+    const list = listAvailable({ sponsorUnlocked: false });
     expect(list).toEqual(["cat", "capybara"]);
   });
 
-  it("returns undefined for unknown species", () => {
-    expect(getPet("dragon")).toBeUndefined();
+  it("lists all 7 species when sponsor unlocked", () => {
+    const list = listAvailable({ sponsorUnlocked: true });
+    expect(list).toContain("dragon");
+    expect(list).toContain("ghost");
+    expect(list.length).toBe(7);
+  });
+
+  it("getPet returns sponsor pets too (caller gates on tier)", () => {
+    expect(getPet("dragon")).toBeDefined();
   });
 });

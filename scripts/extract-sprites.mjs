@@ -19,6 +19,41 @@ const PROTOTYPES = [
     paletteSymbols: { "_": 0, "Oc": 1, "Cb": 2, "Lb": 3, "Fb": 4, "Bl": 5, "Sb": 6, "Nb": 7 },
     outPath: "src/pets/capybara/sprite-data.ts",
   },
+  {
+    pyPath: "./scripts/prototypes/pet_preview3.py",
+    arrayName: "ghost",
+    paletteName: "ghost_palette",
+    paletteSymbols: { "_": 0, "B": 1, "G": 2, "H": 3, "R": 4, "D": 5, "S": 6 },
+    outPath: "src/pets/ghost/sprite-data.ts",
+  },
+  {
+    pyPath: "./scripts/prototypes/pet_preview5.py",
+    arrayName: "dragon",
+    paletteName: "dp",
+    paletteSymbols: { "_": 0, "O": 1, "D": 2, "L": 3, "G": 4, "E": 5, "P": 6, "R": 7, "B": 8 },
+    outPath: "src/pets/dragon/sprite-data.ts",
+  },
+  {
+    pyPath: "./scripts/prototypes/pet_preview5.py",
+    arrayName: "octopus",
+    paletteName: "op",
+    paletteSymbols: { "_": 0, "Oo": 1, "O": 1, "K": 2, "Lk": 3, "W": 4, "Pk": 5, "Ak": 6, "Sk": 7 },
+    outPath: "src/pets/octopus/sprite-data.ts",
+  },
+  {
+    pyPath: "./scripts/prototypes/pet_preview6.py",
+    arrayName: "panda",
+    paletteName: "pp",
+    paletteSymbols: { "_": 0, "Bk": 1, "W": 2, "Lg": 3, "Dg": 4, "Pn": 5, "Sh": 6 },
+    outPath: "src/pets/panda/sprite-data.ts",
+  },
+  {
+    pyPath: "./scripts/prototypes/pet_preview6.py",
+    arrayName: "pig",
+    paletteName: "pgp",
+    paletteSymbols: { "_": 0, "Op": 1, "Pk": 2, "Lp": 3, "Mp": 4, "Bl": 5, "Np": 6, "Wh": 7 },
+    outPath: "src/pets/pig/sprite-data.ts",
+  },
 ];
 
 function parsePythonArray(src, varName, symbols) {
