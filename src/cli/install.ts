@@ -5,6 +5,7 @@ import { confirm, input, select } from "@inquirer/prompts";
 import { isClaudeCodeInstalled } from "../util/claude-code.js";
 import { defaultState, saveState } from "../state/store.js";
 import { listAvailable, getPet } from "../pets/registry.js";
+import type { Species } from "../state/types.js";
 import { familiarHome } from "../util/paths.js";
 import { atomicWrite } from "../util/safe-write.js";
 
@@ -46,9 +47,9 @@ export async function runInstall(): Promise<void> {
     process.exit(1);
   }
 
-  const species = await select({
+  const species: Species = await select({
     message: "Pick your starter pet:",
-    choices: listAvailable().map((s) => {
+    choices: listAvailable({ sponsorUnlocked: false }).map((s) => {
       const p = getPet(s);
       if (!p) throw new Error(`Pet ${s} not found in registry`);
       return { name: `${p.personality.displayName} (${p.personality.defaultName})`, value: s };

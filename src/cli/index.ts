@@ -1,16 +1,20 @@
 import { runPetCommand } from "../commands/pet.js";
 import { runSkinCommand } from "../commands/skin.js";
 import { runSkinsPreviewCommand } from "../commands/skins-preview.js";
+import { runSwitchCommand } from "../commands/switch.js";
+import { runRenameCommand } from "../commands/rename.js";
+import { runClaimCommand } from "../commands/claim.js";
 import { runInstall } from "./install.js";
 import { runUninstall } from "./uninstall.js";
 import { runHook } from "../hooks/handlers.js";
 import type { HookEvent } from "../hooks/proactive.js";
 
 function isSponsorUnlocked(): boolean {
-  // Premium pet pack sets this env var on install. For now this is the
-  // simplest gate — a real activation flow comes with the premium package.
   return process.env.FAMILIAR_SPONSOR === "1" || !!process.env.FAMILIAR_PREMIUM_KEY;
 }
+
+const USAGE =
+  "Usage: familiar <install|uninstall|pet|skin|skins [species] [variant]|switch|rename|claim|hook>";
 
 async function main(): Promise<void> {
   const cmd = process.argv[2];
@@ -30,6 +34,15 @@ async function main(): Promise<void> {
     case "skins":
       runSkinsPreviewCommand(process.argv[3], process.argv[4]);
       break;
+    case "switch":
+      await runSwitchCommand();
+      break;
+    case "rename":
+      await runRenameCommand();
+      break;
+    case "claim":
+      await runClaimCommand();
+      break;
     case "hook": {
       const event = process.argv[3] as HookEvent;
       if (event !== "SessionStart" && event !== "Stop") {
@@ -40,13 +53,12 @@ async function main(): Promise<void> {
       break;
     }
     default:
-      console.log("Usage: familiar <install|uninstall|pet|skin|skins [species]>");
+      console.log(USAGE);
       process.exit(1);
   }
 }
 
 main().catch((e) => {
-  // Don't leak stack traces / absolute paths. Set DEBUG=familiar to see them.
   if (process.env.DEBUG === "familiar") {
     console.error(e);
   } else {
