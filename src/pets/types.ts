@@ -33,9 +33,21 @@ export type TemplateKey =
   | "feed"
   | "play";
 
+export type Tier = "free" | "sponsor";
+
+export interface ColorVariant {
+  id: string;
+  displayName: string;
+  largePalette: Palette;
+  smallPalette: Palette;
+  tier: Tier;
+}
+
 export interface Pet {
   species: Species;
-  large: AnimatedSprite; // 32×32 frames
+  large: AnimatedSprite; // 32×32 frames (pixels reused, palette swapped per variant)
   small: AnimatedSprite; // 8×8 statusline frames
+  variants: ColorVariant[];
+  defaultVariantId: string;
   personality: PersonalityProfile;
 }

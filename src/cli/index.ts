@@ -1,8 +1,15 @@
 import { runPetCommand } from "../commands/pet.js";
+import { runSkinCommand } from "../commands/skin.js";
 import { runInstall } from "./install.js";
 import { runUninstall } from "./uninstall.js";
 import { runHook } from "../hooks/handlers.js";
 import type { HookEvent } from "../hooks/proactive.js";
+
+function isSponsorUnlocked(): boolean {
+  // Premium pet pack sets this env var on install. For now this is the
+  // simplest gate — a real activation flow comes with the premium package.
+  return process.env.FAMILIAR_SPONSOR === "1" || !!process.env.FAMILIAR_PREMIUM_KEY;
+}
 
 async function main(): Promise<void> {
   const cmd = process.argv[2];
@@ -16,6 +23,9 @@ async function main(): Promise<void> {
     case "pet":
       await runPetCommand({ cwd: process.cwd() });
       break;
+    case "skin":
+      await runSkinCommand({ sponsorUnlocked: isSponsorUnlocked() });
+      break;
     case "hook": {
       const event = process.argv[3] as HookEvent;
       if (event !== "SessionStart" && event !== "Stop") {
@@ -26,7 +36,7 @@ async function main(): Promise<void> {
       break;
     }
     default:
-      console.log("Usage: familiar <install|uninstall|pet>");
+      console.log("Usage: familiar <install|uninstall|pet|skin>");
       process.exit(1);
   }
 }

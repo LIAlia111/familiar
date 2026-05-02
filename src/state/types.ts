@@ -10,6 +10,7 @@ export interface PetState {
   schemaVersion: 1;
   species: Species;
   name: string;
+  variantId?: string; // color variant id; falls back to pet's defaultVariantId
   affection: number; // 0-100
   mood: Mood;
   createdAt: string; // ISO timestamp

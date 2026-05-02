@@ -5,6 +5,7 @@ import { speak } from "../brain/speak.js";
 import { DefaultBackend } from "../memory/default.js";
 import { affectionLabel } from "../state/affection.js";
 import { playAnimation } from "../render/animation.js";
+import { resolveVariant, spriteWithPalette } from "../pets/variant-render.js";
 
 export async function runPetCommand(opts: { cwd: string; useApi?: boolean }): Promise<void> {
   const state = loadState();
@@ -18,9 +19,12 @@ export async function runPetCommand(opts: { cwd: string; useApi?: boolean }): Pr
     return;
   }
 
+  const variant = resolveVariant(pet, state.variantId);
+  const colored = spriteWithPalette(pet.large, variant.largePalette);
+
   const finalFrameIndex = pet.personality.moodToFrame[state.mood];
   await playAnimation({
-    sprite: pet.large,
+    sprite: colored,
     finalFrameIndex,
     cycles: 2,
     frameDelayMs: 250,
@@ -41,7 +45,7 @@ export async function runPetCommand(opts: { cwd: string; useApi?: boolean }): Pr
   });
 
   console.log(`\n  ${state.name}: ${line}`);
-  console.log(`\n  亲密度 ${state.affection}/100 · ${affectionLabel(state.affection)}`);
+  console.log(`\n  亲密度 ${state.affection}/100 · ${affectionLabel(state.affection)} · 款式 ${variant.displayName}`);
 
   state.affection = applyDelta(state.affection, 1);
   state.totalInteractions += 1;

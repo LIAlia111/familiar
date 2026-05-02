@@ -1,8 +1,8 @@
 import { loadState } from "../state/store.js";
 import { getPet } from "../pets/registry.js";
-import { pickFrameIndex } from "./frames.js";
 import { affectionLabel } from "../state/affection.js";
 import { SPECIES_ICON } from "../util/constants.js";
+import { resolveVariant } from "../pets/variant-render.js";
 
 function heartBar(affection: number): string {
   const filled = Math.min(5, Math.floor(affection / 20));
@@ -21,11 +21,12 @@ function main(): void {
     return;
   }
 
+  // Resolved variant is currently informational — statusline emoji icon
+  // doesn't change per variant. Reserved for future variant-specific glyphs.
+  resolveVariant(pet, state.variantId);
   const icon = SPECIES_ICON[state.species] ?? "🐾";
-  // Frame index drives a subtle blink suffix; full sprite animation is in /pet.
-  const blinkSuffix = pickFrameIndex(pet.small) % 2 === 1 ? "·" : "";
   process.stdout.write(
-    `${icon} ${state.name}${blinkSuffix}  ${heartBar(state.affection)} · ${affectionLabel(state.affection)}`,
+    `${icon} ${state.name}  ${heartBar(state.affection)} · ${affectionLabel(state.affection)}`,
   );
 }
 
