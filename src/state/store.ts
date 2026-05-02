@@ -3,17 +3,19 @@ import { familiarHome, stateFile } from "../util/paths.js";
 import type { PetState, Species } from "./types.js";
 
 export function loadState(): PetState | null {
-  const path = stateFile();
-  if (!existsSync(path)) return null;
-  return JSON.parse(readFileSync(path, "utf8")) as PetState;
+  try {
+    const parsed = JSON.parse(readFileSync(stateFile(), "utf8")) as PetState;
+    if (parsed.schemaVersion !== 1) return null;
+    return parsed;
+  } catch {
+    return null;
+  }
 }
 
 export function saveState(state: PetState): void {
-  const path = stateFile();
-  if (!existsSync(familiarHome())) {
-    mkdirSync(familiarHome(), { recursive: true });
-  }
-  writeFileSync(path, JSON.stringify(state, null, 2));
+  const home = familiarHome();
+  if (!existsSync(home)) mkdirSync(home, { recursive: true });
+  writeFileSync(stateFile(), JSON.stringify(state, null, 2));
 }
 
 export function defaultState(opts: { species: Species; name: string }): PetState {

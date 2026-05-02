@@ -1,4 +1,5 @@
 import { execSync } from "node:child_process";
+import { DEFAULT_MODEL } from "./constants.js";
 
 export interface SessionInput {
   cwd: string;
@@ -12,12 +13,12 @@ export function parseSessionInput(raw: string): SessionInput {
     const obj = JSON.parse(raw);
     return {
       cwd: obj.cwd ?? process.cwd(),
-      modelId: obj.model?.id ?? "claude-sonnet-4-6",
+      modelId: obj.model?.id ?? DEFAULT_MODEL,
       transcriptPath: obj.transcript_path,
       sessionId: obj.session_id,
     };
   } catch {
-    return { cwd: process.cwd(), modelId: "claude-sonnet-4-6" };
+    return { cwd: process.cwd(), modelId: DEFAULT_MODEL };
   }
 }
 

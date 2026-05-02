@@ -1,30 +1,22 @@
 import type { AnimatedSprite } from "../types.js";
 import { idle, palette } from "./sprite-data.js";
+import { makeBlink, deriveStretch } from "../sprite-utils.js";
 
-const EYE_VALUE = 5;
-const EYE_REPLACE = 4;
-
-function deriveBlink(base: number[][]): number[][] {
-  return base.map((row) =>
-    row.map((px) => (px === EYE_VALUE ? EYE_REPLACE : px)),
-  );
-}
+const deriveBlink = makeBlink(5, 4);
 
 function deriveSmile(base: number[][]): number[][] {
-  return base.map((row, y) => {
-    if (!row.includes(7)) return row;
-    if (y < base.length - 1 && base[y + 1].some((px) => px === 4)) {
-      const next = [...base[y + 1]];
-      const center = Math.floor(next.length / 2);
-      next[center] = 5;
-      return y + 1 < base.length ? next : row;
-    }
-    return row;
-  });
-}
+  // Find the row that contains the nose (palette index 7) and add a small
+  // smile dot on the row directly below it.
+  const noseRowIdx = base.findIndex((row) => row.includes(7));
+  if (noseRowIdx === -1 || noseRowIdx >= base.length - 1) return base;
 
-function deriveStretch(base: number[][]): number[][] {
-  return [base[0], ...base.slice(0, base.length - 1)];
+  return base.map((row, y) => {
+    if (y !== noseRowIdx + 1) return row;
+    const next = [...row];
+    const center = Math.floor(next.length / 2);
+    next[center] = 5;
+    return next;
+  });
 }
 
 export const capybaraLargeSprite: AnimatedSprite = {

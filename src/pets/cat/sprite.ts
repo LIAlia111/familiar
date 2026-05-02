@@ -1,14 +1,8 @@
 import type { AnimatedSprite } from "../types.js";
 import { idle, palette } from "./sprite-data.js";
+import { makeBlink, deriveStretch } from "../sprite-utils.js";
 
-const EYE_VALUE = 4;
-const EYE_REPLACE = 2;
-
-function deriveBlink(base: number[][]): number[][] {
-  return base.map((row) =>
-    row.map((px) => (px === EYE_VALUE ? EYE_REPLACE : px)),
-  );
-}
+const deriveBlink = makeBlink(4, 2);
 
 function deriveSmile(base: number[][]): number[][] {
   return base.map((row) => {
@@ -21,19 +15,11 @@ function deriveSmile(base: number[][]): number[][] {
   });
 }
 
-function deriveStretch(base: number[][]): number[][] {
-  return [base[0], ...base.slice(0, base.length - 1)];
-}
-
-const blink = deriveBlink(idle);
-const smile = deriveSmile(idle);
-const stretch = deriveStretch(idle);
-
 export const catLargeSprite: AnimatedSprite = {
   frames: [
     { pixels: idle, palette },
-    { pixels: blink, palette },
-    { pixels: smile, palette },
-    { pixels: stretch, palette },
+    { pixels: deriveBlink(idle), palette },
+    { pixels: deriveSmile(idle), palette },
+    { pixels: deriveStretch(idle), palette },
   ],
 };

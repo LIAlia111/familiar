@@ -79,9 +79,9 @@ function parsePalette(src, varName) {
   const body = src.slice(startIdx, i - 1);
 
   const palette = {};
-  for (const line of body.split("\n")) {
-    const m = line.match(/(\d+)\s*:\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
-    if (m) palette[Number(m[1])] = [Number(m[2]), Number(m[3]), Number(m[4])];
+  const entryRe = /(\d+)\s*:\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/g;
+  for (const m of body.matchAll(entryRe)) {
+    palette[Number(m[1])] = [Number(m[2]), Number(m[3]), Number(m[4])];
   }
   return palette;
 }
