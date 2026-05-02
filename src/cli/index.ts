@@ -28,7 +28,7 @@ async function main(): Promise<void> {
       await runSkinCommand({ sponsorUnlocked: isSponsorUnlocked() });
       break;
     case "skins":
-      runSkinsPreviewCommand(process.argv[3]);
+      runSkinsPreviewCommand(process.argv[3], process.argv[4]);
       break;
     case "hook": {
       const event = process.argv[3] as HookEvent;
