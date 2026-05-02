@@ -45,19 +45,24 @@ export async function runInstall(): Promise<void> {
     command: "familiar-statusline",
   };
 
-  // Register hooks for proactive speech
+  // Register hooks for proactive speech (schema-aware idempotent check)
+  interface HookEntry { hooks?: Array<{ type?: string; command?: string }> }
   settings.hooks = settings.hooks ?? {};
   settings.hooks.SessionStart = settings.hooks.SessionStart ?? [];
   settings.hooks.Stop = settings.hooks.Stop ?? [];
 
-  const sessionHook = { hooks: [{ type: "command", command: "familiar hook SessionStart" }] };
-  const stopHook = { hooks: [{ type: "command", command: "familiar hook Stop" }] };
+  const hasCommand = (arr: HookEntry[], cmd: string): boolean =>
+    arr.some((e) => e.hooks?.some((h) => h.command === cmd));
 
-  if (!JSON.stringify(settings.hooks.SessionStart).includes("familiar hook SessionStart")) {
-    settings.hooks.SessionStart.push(sessionHook);
+  if (!hasCommand(settings.hooks.SessionStart, "familiar hook SessionStart")) {
+    settings.hooks.SessionStart.push({
+      hooks: [{ type: "command", command: "familiar hook SessionStart" }],
+    });
   }
-  if (!JSON.stringify(settings.hooks.Stop).includes("familiar hook Stop")) {
-    settings.hooks.Stop.push(stopHook);
+  if (!hasCommand(settings.hooks.Stop, "familiar hook Stop")) {
+    settings.hooks.Stop.push({
+      hooks: [{ type: "command", command: "familiar hook Stop" }],
+    });
   }
 
   writeFileSync(settingsPath(), JSON.stringify(settings, null, 2));
