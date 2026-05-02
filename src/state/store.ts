@@ -1,29 +1,27 @@
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { familiarHome, stateFile } from "../util/paths.js";
 import { atomicWrite } from "../util/safe-write.js";
-import type { PetState, Species } from "./types.js";
+import { ensureCurrentSchema } from "./migrate.js";
+import type { PetEntry, PetState, Species } from "./types.js";
 
 export function loadState(): PetState | null {
   try {
-    const parsed = JSON.parse(readFileSync(stateFile(), "utf8")) as PetState;
-    if (!isValidState(parsed)) return null;
-    return parsed;
+    const raw = JSON.parse(readFileSync(stateFile(), "utf8"));
+    const migrated = ensureCurrentSchema(raw);
+    if (!migrated) return null;
+    if (!isValidV2(migrated)) return null;
+    return migrated;
   } catch {
     return null;
   }
 }
 
-function isValidState(s: unknown): s is PetState {
-  if (typeof s !== "object" || s === null) return false;
-  const v = s as Record<string, unknown>;
+function isValidV2(s: PetState): boolean {
   return (
-    v.schemaVersion === 1 &&
-    typeof v.species === "string" &&
-    typeof v.name === "string" &&
-    typeof v.affection === "number" &&
-    typeof v.mood === "string" &&
-    Array.isArray(v.recentQuotes) &&
-    typeof v.totalInteractions === "number"
+    s.schemaVersion === 2 &&
+    typeof s.activeSpecies === "string" &&
+    typeof s.pets === "object" &&
+    Array.isArray(s.unlockedSpecies)
   );
 }
 
@@ -33,11 +31,9 @@ export function saveState(state: PetState): void {
   atomicWrite(stateFile(), JSON.stringify(state, null, 2), 0o600);
 }
 
-export function defaultState(opts: { species: Species; name: string }): PetState {
+export function newPetEntry(opts: { name: string }): PetEntry {
   const now = new Date().toISOString();
   return {
-    schemaVersion: 1,
-    species: opts.species,
     name: opts.name,
     affection: 20,
     mood: "neutral",
@@ -47,4 +43,20 @@ export function defaultState(opts: { species: Species; name: string }): PetState
     recentQuotes: [],
     cooldowns: {},
   };
+}
+
+// Build the very first state.json. Active species owns the default starter.
+export function defaultState(opts: { species: Species; name: string }): PetState {
+  return {
+    schemaVersion: 2,
+    activeSpecies: opts.species,
+    unlockedSpecies: ["cat", "capybara"], // free starter pair
+    pets: {
+      [opts.species]: newPetEntry({ name: opts.name }),
+    },
+  };
+}
+
+export function getActivePet(state: PetState): PetEntry | undefined {
+  return state.pets[state.activeSpecies];
 }

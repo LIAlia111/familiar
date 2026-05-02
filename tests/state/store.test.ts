@@ -25,9 +25,9 @@ describe("state store", () => {
     const s = defaultState({ species: "cat", name: "mimi" });
     saveState(s);
     const loaded = loadState();
-    expect(loaded?.name).toBe("mimi");
-    expect(loaded?.species).toBe("cat");
-    expect(loaded?.affection).toBe(20);
+    expect(loaded?.activeSpecies).toBe("cat");
+    expect(loaded?.pets.cat?.name).toBe("mimi");
+    expect(loaded?.pets.cat?.affection).toBe(20);
   });
 
   it("creates familiar home directory if missing", () => {

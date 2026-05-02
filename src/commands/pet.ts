@@ -1,6 +1,6 @@
-import { loadState, saveState } from "../state/store.js";
+import { loadState, saveState, getActivePet } from "../state/store.js";
 import { getPet } from "../pets/registry.js";
-import { applyDelta } from "../state/affection.js";
+import { applyAction } from "../state/affection.js";
 import { speak } from "../brain/speak.js";
 import { DefaultBackend } from "../memory/default.js";
 import { affectionLabel } from "../state/affection.js";
@@ -13,16 +13,17 @@ export async function runPetCommand(opts: { cwd: string; useApi?: boolean }): Pr
     console.log("familiar 还没装宠物 —— 运行：npx familiar install");
     return;
   }
-  const pet = getPet(state.species);
-  if (!pet) {
-    console.log("宠物丢了，请运行：npx familiar reset");
+  const active = getActivePet(state);
+  const pet = getPet(state.activeSpecies);
+  if (!active || !pet) {
+    console.log("active 宠物丢了。");
     return;
   }
 
-  const variant = resolveVariant(pet, state.variantId);
+  const variant = resolveVariant(pet, active.variantId);
   const colored = spriteWithPalette(pet.large, variant.largePalette);
 
-  const finalFrameIndex = pet.personality.moodToFrame[state.mood];
+  const finalFrameIndex = pet.personality.moodToFrame[active.mood];
   await playAnimation({
     sprite: colored,
     finalFrameIndex,
@@ -37,19 +38,24 @@ export async function runPetCommand(opts: { cwd: string; useApi?: boolean }): Pr
     personality: pet.personality,
     templateKey: "ambient_random",
     trigger: "user invoked /pet",
-    petName: state.name,
-    affection: state.affection,
-    recentQuotes: state.recentQuotes,
+    petName: active.name,
+    affection: active.affection,
+    recentQuotes: active.recentQuotes,
     context: ctx,
     useApi: opts.useApi ?? true,
   });
 
-  console.log(`\n  ${state.name}: ${line}`);
-  console.log(`\n  亲密度 ${state.affection}/100 · ${affectionLabel(state.affection)} · 款式 ${variant.displayName}`);
+  console.log(`\n  ${active.name}: ${line}`);
+  console.log(`\n  亲密度 ${active.affection}/100 · ${affectionLabel(active.affection)} · 款式 ${variant.displayName}`);
 
-  state.affection = applyDelta(state.affection, 1);
-  state.totalInteractions += 1;
-  state.lastInteractionAt = new Date().toISOString();
-  state.recentQuotes = [line, ...state.recentQuotes].slice(0, 10);
+  const result = applyAction(active, "pet");
+  if (result.onCooldown && !result.dailyBonusApplied) {
+    console.log("  （刚摸过了，等会再来吧 ♡）");
+  } else if (result.delta > 0) {
+    console.log(`  ${result.reason}`);
+  }
+  active.totalInteractions += 1;
+  active.lastInteractionAt = new Date().toISOString();
+  active.recentQuotes = [line, ...active.recentQuotes].slice(0, 10);
   saveState(state);
 }

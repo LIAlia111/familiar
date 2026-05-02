@@ -1,4 +1,4 @@
-import { loadState } from "../state/store.js";
+import { loadState, getActivePet } from "../state/store.js";
 import { getPet } from "../pets/registry.js";
 import { affectionLabel } from "../state/affection.js";
 import { SPECIES_ICON } from "../util/constants.js";
@@ -15,18 +15,17 @@ function main(): void {
     process.stdout.write("[familiar not set up — run: npx familiar install]\n");
     return;
   }
-  const pet = getPet(state.species);
-  if (!pet) {
+  const active = getActivePet(state);
+  const pet = getPet(state.activeSpecies);
+  if (!active || !pet) {
     process.stdout.write("[familiar pet missing]\n");
     return;
   }
 
-  // Resolved variant is currently informational — statusline emoji icon
-  // doesn't change per variant. Reserved for future variant-specific glyphs.
-  resolveVariant(pet, state.variantId);
-  const icon = SPECIES_ICON[state.species] ?? "🐾";
+  resolveVariant(pet, active.variantId);
+  const icon = SPECIES_ICON[state.activeSpecies] ?? "🐾";
   process.stdout.write(
-    `${icon} ${state.name}  ${heartBar(state.affection)} · ${affectionLabel(state.affection)}`,
+    `${icon} ${active.name}  ${heartBar(active.affection)} · ${affectionLabel(active.affection)}`,
   );
 }
 

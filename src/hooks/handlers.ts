@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { loadState, saveState } from "../state/store.js";
+import { loadState, saveState, getActivePet } from "../state/store.js";
 import { getPet } from "../pets/registry.js";
 import { speak } from "../brain/speak.js";
 import { DefaultBackend } from "../memory/default.js";
@@ -19,12 +19,13 @@ function readStdin(): string {
 export async function runHook(event: HookEvent): Promise<void> {
   const state = loadState();
   if (!state) return;
-  const pet = getPet(state.species);
-  if (!pet) return;
+  const active = getActivePet(state);
+  const pet = getPet(state.activeSpecies);
+  if (!active || !pet) return;
 
   const session = parseSessionInput(readStdin());
   const trigger = decideTrigger(event, {
-    lastInteractionAt: state.lastInteractionAt,
+    lastInteractionAt: active.lastInteractionAt,
     chattiness: DEFAULT_CHATTINESS,
     now: new Date(),
   });
@@ -37,16 +38,16 @@ export async function runHook(event: HookEvent): Promise<void> {
     personality: pet.personality,
     templateKey: trigger,
     trigger: `hook:${event}`,
-    petName: state.name,
-    affection: state.affection,
-    recentQuotes: state.recentQuotes,
+    petName: active.name,
+    affection: active.affection,
+    recentQuotes: active.recentQuotes,
     context: ctx,
     useApi: false,
   });
 
-  console.log(`\n  ${state.name}: ${line}\n`);
+  console.log(`\n  ${active.name}: ${line}\n`);
 
-  state.recentQuotes = [line, ...state.recentQuotes].slice(0, 10);
-  state.lastInteractionAt = new Date().toISOString();
+  active.recentQuotes = [line, ...active.recentQuotes].slice(0, 10);
+  active.lastInteractionAt = new Date().toISOString();
   saveState(state);
 }
