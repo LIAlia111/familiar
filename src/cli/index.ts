@@ -32,6 +32,11 @@ async function main(): Promise<void> {
 }
 
 main().catch((e) => {
-  console.error(e);
+  // Don't leak stack traces / absolute paths. Set DEBUG=familiar to see them.
+  if (process.env.DEBUG === "familiar") {
+    console.error(e);
+  } else {
+    console.error(`familiar error: ${(e as Error).message ?? String(e)}`);
+  }
   process.exit(1);
 });
