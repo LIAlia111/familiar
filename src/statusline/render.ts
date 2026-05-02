@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { loadState } from "../state/store.js";
 import { getPet } from "../pets/registry.js";
 import { pickFrameIndex } from "./frames.js";

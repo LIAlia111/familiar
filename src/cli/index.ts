@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { runPetCommand } from "../commands/pet.js";
 import { runInstall } from "./install.js";
 import { runUninstall } from "./uninstall.js";
