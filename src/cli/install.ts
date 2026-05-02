@@ -104,7 +104,7 @@ export async function runInstall(): Promise<void> {
     });
   }
 
-  atomicWrite(settingsPath(), JSON.stringify(settings, null, 2));
+  atomicWrite(settingsPath(), JSON.stringify(settings, null, 2), 0o600);
 
   console.log(`\n✓ ${name} is ready! Restart Claude Code to see them in your statusline.`);
   console.log("  Try /pet to chat with them anytime.\n");

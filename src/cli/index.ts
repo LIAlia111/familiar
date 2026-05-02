@@ -9,8 +9,11 @@ import { runUninstall } from "./uninstall.js";
 import { runHook } from "../hooks/handlers.js";
 import type { HookEvent } from "../hooks/proactive.js";
 
+// Sponsor unlock gate. FAMILIAR_PREMIUM_KEY is reserved for a future signed
+// activation key — for now only the explicit FAMILIAR_SPONSOR=1 flag works,
+// so we don't accept arbitrary non-empty strings as a key.
 function isSponsorUnlocked(): boolean {
-  return process.env.FAMILIAR_SPONSOR === "1" || !!process.env.FAMILIAR_PREMIUM_KEY;
+  return process.env.FAMILIAR_SPONSOR === "1";
 }
 
 const USAGE =

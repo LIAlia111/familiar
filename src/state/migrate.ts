@@ -3,6 +3,8 @@ import type { PetState, PetStateV1, Species } from "./types.js";
 const FREE_STARTER_SPECIES: Species[] = ["cat", "capybara"];
 
 export function migrateV1ToV2(v1: PetStateV1): PetState {
+  // Don't pre-unlock the second free starter without an entry — the user
+  // will adopt it via /switch flow which auto-creates the PetEntry.
   return {
     schemaVersion: 2,
     activeSpecies: v1.species,
@@ -17,7 +19,7 @@ export function migrateV1ToV2(v1: PetStateV1): PetState {
         lastInteractionAt: v1.lastInteractionAt,
         totalInteractions: v1.totalInteractions,
         recentQuotes: v1.recentQuotes,
-        cooldowns: {}, // v1 cooldowns used ISO strings; drop them — small cost
+        cooldowns: {},
       },
     },
   };

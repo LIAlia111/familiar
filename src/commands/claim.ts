@@ -26,6 +26,10 @@ export async function runClaimCommand(): Promise<void> {
   }
 
   const lockedSponsor = listAll().filter((sp: Species) => !state.unlockedSpecies.includes(sp));
+  if (lockedSponsor.length === 0) {
+    console.log("\n已领取全部赞助宠物 ♥\n");
+    return;
+  }
   const choices = lockedSponsor.map((sp) => {
     const pet = getPet(sp);
     return { name: `${pet?.personality.displayName} (${pet?.personality.defaultName})`, value: sp };

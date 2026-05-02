@@ -1,6 +1,6 @@
-import { loadState, saveState } from "../state/store.js";
+import { loadState, saveState, newPetEntry } from "../state/store.js";
 import { getPet } from "../pets/registry.js";
-import { select } from "@inquirer/prompts";
+import { input, select } from "@inquirer/prompts";
 
 export async function runSwitchCommand(): Promise<void> {
   const state = loadState();
@@ -27,6 +27,14 @@ export async function runSwitchCommand(): Promise<void> {
     choices,
     default: state.activeSpecies,
   });
+
+  // Adopt unowned species on first switch — prevents the "active pet missing" dead end.
+  if (!state.pets[sp]) {
+    const pet = getPet(sp);
+    const defaultName = pet?.personality.defaultName ?? sp;
+    const name = await input({ message: `给 ${pet?.personality.displayName} 起名:`, default: defaultName });
+    state.pets[sp] = newPetEntry({ name: name.trim() || defaultName });
+  }
 
   state.activeSpecies = sp;
   saveState(state);

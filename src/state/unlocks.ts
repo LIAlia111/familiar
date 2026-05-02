@@ -44,8 +44,7 @@ export function earnedSponsorSlots(state: PetState): number {
 
 // True when the user is eligible to claim a new sponsor pet right now.
 export function hasUnclaimedSponsorSlot(state: PetState): boolean {
-  // unlockedSpecies starts with the 2 starters; each earned slot adds one.
   const earned = earnedSponsorSlots(state);
-  const claimed = state.unlockedSpecies.length - 2;
+  const claimed = Math.max(0, state.unlockedSpecies.length - 2);
   return earned > claimed;
 }

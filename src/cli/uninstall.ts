@@ -52,7 +52,7 @@ export async function runUninstall(): Promise<void> {
   }
   if (settings.hooks && Object.keys(settings.hooks).length === 0) delete settings.hooks;
 
-  atomicWrite(settingsPath(), JSON.stringify(settings, null, 2));
+  atomicWrite(settingsPath(), JSON.stringify(settings, null, 2), 0o600);
   console.log("✓ Removed familiar entries from Claude Code settings.");
 
   const wipe = await confirm({

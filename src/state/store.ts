@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync } from "node:fs";
 import { familiarHome, stateFile } from "../util/paths.js";
 import { atomicWrite } from "../util/safe-write.js";
 import { ensureCurrentSchema } from "./migrate.js";
+import { sanitizeState } from "./sanitize.js";
 import type { PetEntry, PetState, Species } from "./types.js";
 
 export function loadState(): PetState | null {
@@ -10,7 +11,7 @@ export function loadState(): PetState | null {
     const migrated = ensureCurrentSchema(raw);
     if (!migrated) return null;
     if (!isValidV2(migrated)) return null;
-    return migrated;
+    return sanitizeState(migrated);
   } catch {
     return null;
   }

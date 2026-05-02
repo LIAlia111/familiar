@@ -1,7 +1,7 @@
 import { loadState, saveState, getActivePet } from "../state/store.js";
 import { getPet } from "../pets/registry.js";
 import { select } from "@inquirer/prompts";
-import { unlockedVariantIds } from "../state/unlocks.js";
+import { unlockedVariantIds, SKIN_UNLOCK_LEVELS } from "../state/unlocks.js";
 
 export async function runSkinCommand(opts: { sponsorUnlocked: boolean }): Promise<void> {
   const state = loadState();
@@ -20,12 +20,8 @@ export async function runSkinCommand(opts: { sponsorUnlocked: boolean }): Promis
 
   const choices = pet.variants.map((v, i) => {
     const isUnlocked = unlocked.has(v.id);
-    const requiredLvl = SKIN_UNLOCK_LEVELS[i];
-    const tag = isUnlocked
-      ? ""
-      : opts.sponsorUnlocked
-      ? `🔒 等级 ${requiredLvl} 解锁`
-      : `🔒 等级 ${requiredLvl} 解锁 / 赞助跳过`;
+    const required = SKIN_UNLOCK_LEVELS[i] ?? 100;
+    const tag = isUnlocked ? "" : `🔒 等级 ${required} 解锁 / 赞助跳过`;
     return {
       name: tag ? `${v.displayName}  ${tag}` : v.displayName,
       value: v.id,
@@ -39,12 +35,15 @@ export async function runSkinCommand(opts: { sponsorUnlocked: boolean }): Promis
     default: active.variantId ?? pet.defaultVariantId,
   });
 
+  // Re-validate after the prompt — a malicious wrapper could bypass the disabled flag.
+  if (!unlocked.has(variantId)) {
+    console.log("\n✗ 这款皮肤还没解锁。\n");
+    return;
+  }
+
   active.variantId = variantId;
   saveState(state);
 
   const v = pet.variants.find((x) => x.id === variantId);
-  console.log(`\n✓ Skin changed to ${v?.displayName}.`);
+  console.log(`\n✓ Skin changed to ${v?.displayName}.\n`);
 }
-
-// Keep in sync with src/state/unlocks.ts
-const SKIN_UNLOCK_LEVELS = [0, 40, 60, 80, 100];

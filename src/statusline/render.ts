@@ -25,7 +25,7 @@ function main(): void {
   resolveVariant(pet, active.variantId);
   const icon = SPECIES_ICON[state.activeSpecies] ?? "🐾";
   process.stdout.write(
-    `${icon} ${active.name}  ${heartBar(active.affection)} · ${affectionLabel(active.affection)}`,
+    `${icon} ${active.name} Lv.${active.affection}  ${heartBar(active.affection)} · ${affectionLabel(active.affection)}`,
   );
 }
 
