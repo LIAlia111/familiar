@@ -60,6 +60,27 @@ The statusline and proactive hooks work great on mobile SSH clients like Termius
 
 Sponsoring unlocks all 7 pets + priority support. Core engine stays free and open-source forever.
 
+### Activating sponsor status
+
+After sponsoring on GitHub, run:
+
+```bash
+familiar activate
+```
+
+`familiar` opens a GitHub Device Flow login — you'll get a one-time code, paste it on github.com to authorize, and `familiar` will verify your sponsorship status via the GitHub GraphQL API. No tokens are stored locally; only the verification result is cached for 30 days.
+
+### For maintainers and forks
+
+If you fork this project, override the GitHub OAuth client ID and sponsor target:
+
+```bash
+export FAMILIAR_GITHUB_CLIENT_ID=Iv1.your-oauth-app-id
+export FAMILIAR_SPONSOR_TARGET=your-github-login
+```
+
+Register your OAuth App at https://github.com/settings/developers with **device flow enabled**.
+
 ## How affection works
 
 Your pet's affection grows from `0` (陌生) to `100` (灵魂伴侣) based on how you interact:

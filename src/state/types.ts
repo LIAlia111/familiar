@@ -24,12 +24,21 @@ export interface PetEntry {
   };
 }
 
+// Cached sponsorship verification result.
+export interface SponsorCheck {
+  isSponsor: boolean;
+  checkedAt: number; // ms timestamp
+  viewerLogin: string | null; // GitHub login that was checked
+  maintainer: string; // who they sponsor (locked at check time)
+}
+
 // v2 schema: multi-pet support.
 export interface PetState {
   schemaVersion: 2;
   activeSpecies: Species;
   pets: Partial<Record<Species, PetEntry>>;
   unlockedSpecies: Species[]; // species the user can pick from in /pet-switch
+  sponsorCheck?: SponsorCheck;
 }
 
 // v1 schema (legacy) — kept for migration.

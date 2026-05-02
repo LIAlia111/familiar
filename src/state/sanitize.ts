@@ -54,6 +54,18 @@ export function sanitizeState(state: PetState): PetState {
     }
   }
 
+  // sponsorCheck: drop if checkedAt is in the future or > 1 year old
+  if (state.sponsorCheck) {
+    const sc = state.sponsorCheck;
+    if (
+      typeof sc.checkedAt !== "number" ||
+      sc.checkedAt > now ||
+      now - sc.checkedAt > 365 * 24 * 60 * 60 * 1000
+    ) {
+      state.sponsorCheck = undefined;
+    }
+  }
+
   // activeSpecies must point at an existing entry; fall back to first owned pet
   if (!state.pets[state.activeSpecies]) {
     const owned = Object.keys(state.pets) as Species[];

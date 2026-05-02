@@ -4,20 +4,20 @@ import { runSkinsPreviewCommand } from "../commands/skins-preview.js";
 import { runSwitchCommand } from "../commands/switch.js";
 import { runRenameCommand } from "../commands/rename.js";
 import { runClaimCommand } from "../commands/claim.js";
+import { runActivateCommand } from "../commands/activate.js";
 import { runInstall } from "./install.js";
 import { runUninstall } from "./uninstall.js";
 import { runHook } from "../hooks/handlers.js";
 import type { HookEvent } from "../hooks/proactive.js";
+import { loadState } from "../state/store.js";
+import { isSponsorActive } from "../sponsor/state.js";
 
-// Sponsor unlock gate. FAMILIAR_PREMIUM_KEY is reserved for a future signed
-// activation key — for now only the explicit FAMILIAR_SPONSOR=1 flag works,
-// so we don't accept arbitrary non-empty strings as a key.
 function isSponsorUnlocked(): boolean {
-  return process.env.FAMILIAR_SPONSOR === "1";
+  return isSponsorActive(loadState());
 }
 
 const USAGE =
-  "Usage: familiar <install|uninstall|pet|skin|skins [species] [variant]|switch|rename|claim|hook>";
+  "Usage: familiar <install|uninstall|pet|skin|skins [species] [variant]|switch|rename|claim|activate|hook>";
 
 async function main(): Promise<void> {
   const cmd = process.argv[2];
@@ -45,6 +45,9 @@ async function main(): Promise<void> {
       break;
     case "claim":
       await runClaimCommand();
+      break;
+    case "activate":
+      await runActivateCommand();
       break;
     case "hook": {
       const event = process.argv[3] as HookEvent;
