@@ -16,7 +16,9 @@ export function runSkinsPreviewCommand(speciesArg?: string): void {
     const tag = variant.tier === "sponsor" ? "🔒 sponsor" : "🆓 free";
     console.log(`  [${variant.id}] ${variant.displayName}  ${tag}`);
     console.log();
-    const frame = pet.large.frames[0];
-    console.log(renderSprite({ pixels: frame.pixels, palette: variant.largePalette }));
+    // Use the 8×8 statusline sprite — ~4 lines tall, lets all 5 fit on screen.
+    const frame = pet.small.frames[0];
+    console.log(renderSprite({ pixels: frame.pixels, palette: variant.smallPalette }));
   }
+  console.log("  Pick one with: familiar skin\n");
 }
