@@ -15,6 +15,14 @@ export async function playAnimation(opts: PlayOpts): Promise<void> {
   const out = opts.out ?? process.stdout;
   const { sprite, cycles, frameDelayMs, finalFrameIndex } = opts;
 
+  // Skip animation when stdout isn't a real terminal — cursor-up escapes
+  // don't redraw and we'd spam the entire output buffer instead.
+  const isTTY = "isTTY" in out && out.isTTY === true;
+  if (!isTTY) {
+    out.write(renderSprite(sprite.frames[finalFrameIndex]));
+    return;
+  }
+
   const linesPerFrame = Math.ceil(sprite.frames[0].pixels.length / 2);
   let firstDraw = true;
 

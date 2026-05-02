@@ -5,7 +5,7 @@ import type { AnimatedSprite } from "../../src/pets/types.js";
 describe("playAnimation", () => {
   it("renders frames in sequence and ends on the final frame", async () => {
     const writes: string[] = [];
-    const fakeOut = { write: (s: string) => writes.push(s) } as unknown as NodeJS.WriteStream;
+    const fakeOut = { write: (s: string) => writes.push(s), isTTY: true } as unknown as NodeJS.WriteStream;
 
     const sprite: AnimatedSprite = {
       frames: [
@@ -28,7 +28,7 @@ describe("playAnimation", () => {
 
   it("handles single-frame sprites without crashing", async () => {
     const writes: string[] = [];
-    const fakeOut = { write: (s: string) => writes.push(s) } as unknown as NodeJS.WriteStream;
+    const fakeOut = { write: (s: string) => writes.push(s), isTTY: true } as unknown as NodeJS.WriteStream;
     const sprite: AnimatedSprite = {
       frames: [{ pixels: [[1], [1]], palette: { 1: [128, 128, 128] } }],
     };
