@@ -1,5 +1,6 @@
 import { runPetCommand } from "../commands/pet.js";
 import { runSkinCommand } from "../commands/skin.js";
+import { runSkinsPreviewCommand } from "../commands/skins-preview.js";
 import { runInstall } from "./install.js";
 import { runUninstall } from "./uninstall.js";
 import { runHook } from "../hooks/handlers.js";
@@ -26,6 +27,9 @@ async function main(): Promise<void> {
     case "skin":
       await runSkinCommand({ sponsorUnlocked: isSponsorUnlocked() });
       break;
+    case "skins":
+      runSkinsPreviewCommand(process.argv[3]);
+      break;
     case "hook": {
       const event = process.argv[3] as HookEvent;
       if (event !== "SessionStart" && event !== "Stop") {
@@ -36,7 +40,7 @@ async function main(): Promise<void> {
       break;
     }
     default:
-      console.log("Usage: familiar <install|uninstall|pet|skin>");
+      console.log("Usage: familiar <install|uninstall|pet|skin|skins [species]>");
       process.exit(1);
   }
 }
