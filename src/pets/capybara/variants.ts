@@ -9,7 +9,7 @@ import type { ColorVariant } from "../types.js";
 export const capybaraVariants: ColorVariant[] = [
   {
     id: "brown",
-    displayName: "Brown 棕色",
+    displayName: "Brown 棕牛",
     tier: "free",
     largePalette: {
       1: [52, 28, 8],

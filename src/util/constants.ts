@@ -7,7 +7,7 @@ export const DEFAULT_MODEL = "claude-sonnet-4-6";
 // "?" on older terminal fonts, so we substitute close matches.
 export const SPECIES_ICON: Record<Species, string> = {
   cat: "🐱",
-  capybara: "🐹", // hamster substitute (no Unicode capybara; both are round brown rodents)
+  capybara: "🐮", // displays as Cow (sprite was redesigned with horns); internal id kept as "capybara"
   dragon: "🐉",
   ghost: "👻",
   octopus: "🐙", // proper octopus (was 🦑 squid — also more accurate)
