@@ -1,6 +1,7 @@
 import { loadState, saveState } from "../state/store.js";
 import { deviceAuth } from "../sponsor/oauth.js";
 import { checkSponsorStatus } from "../sponsor/check.js";
+import { markSponsor } from "../sponsor/state.js";
 import { GITHUB_CLIENT_ID, SPONSOR_MAINTAINER } from "../sponsor/config.js";
 
 export async function runActivateCommand(): Promise<void> {
@@ -40,19 +41,20 @@ export async function runActivateCommand(): Promise<void> {
     return;
   }
 
-  state.sponsorCheck = {
-    isSponsor: result.isSponsor,
-    checkedAt: Date.now(),
-    viewerLogin: result.viewerLogin,
-    maintainer: SPONSOR_MAINTAINER,
-  };
-  saveState(state);
-
   const viewer = result.viewerLogin ?? "(unknown)";
   if (result.isSponsor) {
+    markSponsor(state, { viewerLogin: result.viewerLogin, maintainer: SPONSOR_MAINTAINER });
+    saveState(state);
     console.log(`✓ 赞助身份已验证（GitHub @${viewer} 赞助 @${SPONSOR_MAINTAINER}）`);
-    console.log("  全部 7 只宠物 + 35 款皮肤已解锁 ♥\n");
+    console.log("  全部宠物 + 皮肤已解锁 ♥\n");
   } else {
+    state.sponsorCheck = {
+      isSponsor: false,
+      checkedAt: Date.now(),
+      viewerLogin: result.viewerLogin,
+      maintainer: SPONSOR_MAINTAINER,
+    };
+    saveState(state);
     console.log(`  GitHub @${viewer} 暂未赞助 @${SPONSOR_MAINTAINER}`);
     console.log(`  赞助页面：https://github.com/sponsors/${SPONSOR_MAINTAINER}`);
     console.log("  赞助后再次运行 familiar activate 即可解锁。\n");

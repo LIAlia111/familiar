@@ -35,11 +35,17 @@ export interface CodeVerification {
 }
 
 export function verifyActivationCode(code: string): CodeVerification {
+  // GitHub logins cap at 39 chars; allow some slack and reject anything
+  // that's clearly not a real login before we hash or persist it.
+  if (typeof code !== "string" || code.length > 128) return { valid: false };
   const parts = code.trim().split(":");
   if (parts.length !== 2) return { valid: false };
   const [login, providedHash] = parts;
   if (!login || !providedHash) return { valid: false };
   const expected = hashFor(login);
+  // Plain `===` (not timingSafeEqual) is intentional. The shared secret is
+  // public, so an attacker who cares can compute `expected` directly —
+  // timing leakage gains them nothing.
   if (providedHash.toLowerCase() === expected) {
     return { valid: true, login: normalize(login) };
   }

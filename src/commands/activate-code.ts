@@ -1,9 +1,7 @@
 import { loadState, saveState } from "../state/store.js";
 import { verifyActivationCode } from "../sponsor/code.js";
-import type { Species } from "../state/types.js";
-
-const ALL_SPECIES: Species[] = ["cat", "capybara", "dragon", "ghost", "octopus", "panda", "pig"];
-const AFDIAN_URL = "https://afdian.com/a/Lief-ai";
+import { markSponsor } from "../sponsor/state.js";
+import { AFDIAN_URL } from "../sponsor/config.js";
 
 export interface ActivateCodeOpts {
   codeArg?: string;
@@ -29,17 +27,9 @@ export async function runActivateCodeCommand(opts: ActivateCodeOpts): Promise<vo
     return;
   }
 
-  const unlocked = new Set<Species>(state.unlockedSpecies);
-  for (const s of ALL_SPECIES) unlocked.add(s);
-  state.unlockedSpecies = [...unlocked];
-  state.sponsorCheck = {
-    isSponsor: true,
-    checkedAt: Date.now(),
-    viewerLogin: result.login,
-    maintainer: "afdian",
-  };
+  markSponsor(state, { viewerLogin: result.login, maintainer: "afdian" });
   saveState(state);
 
   console.log(`\n✓ 激活成功（@${result.login}）`);
-  console.log("  全部 7 只宠物 + 35 款皮肤已解锁 ♥\n");
+  console.log("  全部宠物 + 皮肤已解锁 ♥\n");
 }

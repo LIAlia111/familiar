@@ -2,6 +2,7 @@ import { loadState, saveState, getActivePet } from "../state/store.js";
 import { getPet } from "../pets/registry.js";
 import { select } from "@inquirer/prompts";
 import { unlockedVariantIds, SKIN_UNLOCK_LEVELS } from "../state/unlocks.js";
+import { AFDIAN_URL, SPONSOR_MAINTAINER } from "../sponsor/config.js";
 
 export interface SkinOpts {
   sponsorUnlocked: boolean;
@@ -52,8 +53,8 @@ export async function runSkinCommand(opts: SkinOpts): Promise<void> {
   if (!unlocked.has(variantId)) {
     console.log("\n✗ 这款皮肤还没解锁。");
     console.log("  · 升级到对应等级解锁");
-    console.log("  · 或赞助：https://github.com/sponsors/LIAlia111");
-    console.log("    或国内：https://afdian.com/a/Lief-ai\n");
+    console.log(`  · 或赞助：https://github.com/sponsors/${SPONSOR_MAINTAINER}`);
+    console.log(`    或国内：${AFDIAN_URL}\n`);
     return;
   }
 

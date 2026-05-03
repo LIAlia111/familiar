@@ -19,3 +19,7 @@ export const SPONSOR_MAINTAINER =
 
 // Sponsorship status cache duration (30 days).
 export const SPONSOR_CACHE_MS = 30 * 24 * 60 * 60 * 1000;
+
+// Afdian (爱发电) page for Chinese sponsors. Surfaced in lock copy and as
+// the manual activation-code fallback alongside GitHub Sponsors.
+export const AFDIAN_URL = "https://afdian.com/a/Lief-ai";
