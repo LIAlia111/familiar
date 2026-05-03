@@ -24,13 +24,30 @@ function main(): void {
 
   resolveVariant(pet, active.variantId);
   const icon = SPECIES_ICON[state.activeSpecies] ?? "🐾";
-  const last = active.recentQuotes[0];
-  // Cap the speech bubble so a long LLM-generated reply doesn't blow up
-  // the statusline width on narrow terminals.
-  const bubble = last ? `  💭 ${truncate(last, 40)}` : "";
+  const text = pickBubble(pet, active);
+  const bubble = text ? `  💭 ${truncate(text, 40)}` : "";
   process.stdout.write(
     `${icon} ${active.name} Lv.${active.affection}  ${heartBar(active.affection)} · ${affectionLabel(active.affection)}${bubble}`,
   );
+}
+
+// Statusline speech bubble. For the first 20s after the pet speaks the
+// bubble shows that quote; after that it falls through to a rotating
+// ambient line (also 20s per slot), so the pet feels alive even when
+// idle. Pure function of clock + state — no extra writes.
+const STICKY_QUOTE_MS = 20_000;
+const AMBIENT_ROTATION_MS = 20_000;
+function pickBubble(
+  pet: ReturnType<typeof getPet> & object,
+  active: { recentQuotes: string[]; lastInteractionAt: string },
+): string {
+  const last = active.recentQuotes[0];
+  const age = Date.now() - new Date(active.lastInteractionAt).getTime();
+  if (last && age < STICKY_QUOTE_MS) return last;
+  const ambient = pet.personality.templates.ambient_random ?? [];
+  if (ambient.length === 0) return last ?? "";
+  const bucket = Math.floor(Date.now() / AMBIENT_ROTATION_MS);
+  return ambient[bucket % ambient.length];
 }
 
 function truncate(s: string, max: number): string {
