@@ -50,7 +50,10 @@ export async function runSkinCommand(opts: SkinOpts): Promise<void> {
   }
 
   if (!unlocked.has(variantId)) {
-    console.log("\n✗ 这款皮肤还没解锁。\n");
+    console.log("\n✗ 这款皮肤还没解锁。");
+    console.log("  · 升级到对应等级解锁");
+    console.log("  · 或赞助：https://github.com/sponsors/LIAlia111");
+    console.log("    或国内：https://afdian.com/a/Lief-ai\n");
     return;
   }
 

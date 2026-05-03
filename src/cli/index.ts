@@ -8,6 +8,7 @@ import { runSwitchCommand } from "../commands/switch.js";
 import { runRenameCommand } from "../commands/rename.js";
 import { runClaimCommand } from "../commands/claim.js";
 import { runActivateCommand } from "../commands/activate.js";
+import { runActivateCodeCommand } from "../commands/activate-code.js";
 import { runInstall } from "./install.js";
 import { runUninstall } from "./uninstall.js";
 import { runHook } from "../hooks/handlers.js";
@@ -20,7 +21,7 @@ function isSponsorUnlocked(): boolean {
 }
 
 const USAGE =
-  "Usage: familiar <install|uninstall|pet|feed|play|stats|skin|skins [species] [variant]|switch|rename|claim|activate|hook>";
+  "Usage: familiar <install|uninstall|pet|feed|play|stats|skin|skins [species] [variant]|switch|rename|claim|activate|activate-code <code>|hook>";
 
 async function main(): Promise<void> {
   const cmd = process.argv[2];
@@ -63,6 +64,9 @@ async function main(): Promise<void> {
       break;
     case "activate":
       await runActivateCommand();
+      break;
+    case "activate-code":
+      await runActivateCodeCommand({ codeArg: process.argv[3] });
       break;
     case "hook": {
       const event = process.argv[3] as HookEvent;

@@ -56,19 +56,27 @@ The statusline and proactive hooks work great on mobile SSH clients like Termius
 - 🐼 **Panda** — lazy, food-motivated, comically unbothered
 - 🐷 **Pig** — innocent, food-loving, cheerful
 
-[Become a sponsor →](https://github.com/sponsors/LIAlia111)
+[Become a sponsor →](https://github.com/sponsors/LIAlia111)  ·  [国内赞助（爱发电）→](https://afdian.com/a/Lief-ai)
 
 Sponsoring unlocks all 7 pets + priority support. Core engine stays free and open-source forever.
 
 ### Activating sponsor status
 
-After sponsoring on GitHub, run:
+**GitHub Sponsors** — automatic verification:
 
 ```bash
 familiar activate
 ```
 
-`familiar` opens a GitHub Device Flow login — you'll get a one-time code, paste it on github.com to authorize, and `familiar` will verify your sponsorship status via the GitHub GraphQL API. No tokens are stored locally; only the verification result is cached for 30 days.
+Opens a GitHub Device Flow login. `familiar` verifies your sponsorship via the GitHub GraphQL API. No tokens stored locally; result is cached for 30 days.
+
+**爱发电（Afdian）** — manual activation code:
+
+After sponsoring at [afdian.com/a/Lief-ai](https://afdian.com/a/Lief-ai), DM me your GitHub username and I'll send back an activation code:
+
+```bash
+familiar activate-code <your-code>
+```
 
 ### For maintainers and forks
 
