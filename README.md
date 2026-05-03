@@ -2,6 +2,11 @@
 
 > A pixel-art pet companion for [Claude Code](https://docs.anthropic.com/claude/claude-code) CLI. Lives in your statusline. Reacts to your sessions. Grows with you.
 
+[![npm version](https://img.shields.io/npm/v/claude-familiar.svg)](https://www.npmjs.com/package/claude-familiar)
+[![npm downloads](https://img.shields.io/npm/dw/claude-familiar.svg)](https://www.npmjs.com/package/claude-familiar)
+[![license](https://img.shields.io/npm/l/claude-familiar.svg)](./LICENSE)
+[![node](https://img.shields.io/node/v/claude-familiar.svg)](https://nodejs.org)
+
 ## Install
 
 ```bash
