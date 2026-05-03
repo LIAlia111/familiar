@@ -22,7 +22,7 @@ Other Claude Code pet projects either require [Kitty graphics protocol](https://
 `familiar` is the first companion that:
 
 - Works in **any terminal** with 24-bit ANSI color (Tabby, Windows Terminal, iTerm, kitty, WezTerm, even basic SSH)
-- Has **real personality** — replies powered by your own Claude account, no extra API key
+- Has **real personality** — replies powered by your own Claude Code login (`claude -p` under the hood). No extra API key, no extra cost beyond your existing plan.
 - Has **persistent memory** — reads `CLAUDE.md` and `~/.claude/projects/-/memory/` so the pet knows your project
 - **Open-core**: 2 free pets + premium pet pack via sponsorship
 
@@ -123,6 +123,10 @@ Environment variables:
 - `FAMILIAR_HOME` — override the state directory (default: `~/.familiar`)
 - `FAMILIAR_MODEL` — override the Claude model used for personality replies (default: same model your Claude Code uses)
 - `FAMILIAR_MEMORY_DIR` — opt-in: a directory of `.md` files the pet reads to personalize replies (e.g. `~/.claude/projects/-/memory/`). Each file is redacted before being sent to the model. Default: disabled.
+- `FAMILIAR_BRAIN` — pick how the pet generates replies:
+  - `cli` (default) — spawn `claude -p`, reuse your Claude Code login. No API key required.
+  - `api` — call the Anthropic SDK directly using `ANTHROPIC_API_KEY`.
+  - `template` — disable the LLM entirely; pet always falls back to its hand-written lines.
 
 ## Author
 
