@@ -1,4 +1,7 @@
 import { runPetCommand } from "../commands/pet.js";
+import { runFeedCommand } from "../commands/feed.js";
+import { runPlayCommand } from "../commands/play.js";
+import { runStatsCommand } from "../commands/stats.js";
 import { runSkinCommand } from "../commands/skin.js";
 import { runSkinsPreviewCommand } from "../commands/skins-preview.js";
 import { runSwitchCommand } from "../commands/switch.js";
@@ -17,7 +20,7 @@ function isSponsorUnlocked(): boolean {
 }
 
 const USAGE =
-  "Usage: familiar <install|uninstall|pet|skin|skins [species] [variant]|switch|rename|claim|activate|hook>";
+  "Usage: familiar <install|uninstall|pet|feed|play|stats|skin|skins [species] [variant]|switch|rename|claim|activate|hook>";
 
 async function main(): Promise<void> {
   const cmd = process.argv[2];
@@ -30,6 +33,15 @@ async function main(): Promise<void> {
       break;
     case "pet":
       await runPetCommand({ cwd: process.cwd() });
+      break;
+    case "feed":
+      await runFeedCommand({ cwd: process.cwd() });
+      break;
+    case "play":
+      await runPlayCommand({ cwd: process.cwd() });
+      break;
+    case "stats":
+      runStatsCommand({ sponsorUnlocked: isSponsorUnlocked() });
       break;
     case "skin":
       await runSkinCommand({ sponsorUnlocked: isSponsorUnlocked() });
