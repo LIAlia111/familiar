@@ -11,8 +11,9 @@ describe("redact", () => {
   });
 
   it("redacts GitHub tokens", () => {
-    const out = redact("token: ghp_NOT_REAL_TEST_FIXTURE_VALUE_xxxxx");
-    expect(out).not.toContain("ghp_NOT_REAL");
+    // Test fixture — alphanumeric only so the github-token regex matches.
+    const out = redact("ghp_NOTREALTESTFIXTUREVALUExxxxx");
+    expect(out).not.toContain("ghp_NOT");
     expect(out).toContain("[REDACTED:github-token]");
   });
 
