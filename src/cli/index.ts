@@ -44,16 +44,19 @@ async function main(): Promise<void> {
       runStatsCommand({ sponsorUnlocked: isSponsorUnlocked() });
       break;
     case "skin":
-      await runSkinCommand({ sponsorUnlocked: isSponsorUnlocked() });
+      await runSkinCommand({
+        sponsorUnlocked: isSponsorUnlocked(),
+        variantArg: process.argv[3],
+      });
       break;
     case "skins":
       runSkinsPreviewCommand(process.argv[3], process.argv[4]);
       break;
     case "switch":
-      await runSwitchCommand();
+      await runSwitchCommand({ speciesArg: process.argv[3], nameArg: process.argv[4] });
       break;
     case "rename":
-      await runRenameCommand();
+      await runRenameCommand({ nameArg: process.argv[3] });
       break;
     case "claim":
       await runClaimCommand();

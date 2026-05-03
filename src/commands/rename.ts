@@ -1,7 +1,7 @@
 import { loadState, saveState, getActivePet } from "../state/store.js";
 import { input } from "@inquirer/prompts";
 
-export async function runRenameCommand(): Promise<void> {
+export async function runRenameCommand(opts: { nameArg?: string } = {}): Promise<void> {
   const state = loadState();
   if (!state) {
     console.log("familiar 还没装宠物 —— 运行：npx familiar install");
@@ -13,10 +13,10 @@ export async function runRenameCommand(): Promise<void> {
     return;
   }
 
-  const name = await input({
-    message: "New name:",
-    default: active.name,
-  });
+  const name =
+    opts.nameArg !== undefined
+      ? opts.nameArg
+      : await input({ message: "New name:", default: active.name });
 
   const trimmed = name.trim();
   if (!trimmed) {
