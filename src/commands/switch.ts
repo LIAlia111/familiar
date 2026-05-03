@@ -1,7 +1,8 @@
 import { loadState, saveState, newPetEntry } from "../state/store.js";
-import { getPet } from "../pets/registry.js";
+import { getPet, listAll } from "../pets/registry.js";
 import { input, select } from "@inquirer/prompts";
 import type { Species } from "../state/types.js";
+import { isSponsorActive } from "../sponsor/state.js";
 
 export interface SwitchOpts {
   // CLI arg: skip interactive picker if a valid species is given.
@@ -17,16 +18,22 @@ export async function runSwitchCommand(opts: SwitchOpts = {}): Promise<void> {
     return;
   }
 
+  // Sponsor mode unlocks all 7 species directly; otherwise honor unlockedSpecies.
+  const sponsor = isSponsorActive(state);
+  const accessible: Species[] = sponsor ? listAll() : state.unlockedSpecies;
+
   let sp: Species;
 
   if (opts.speciesArg) {
-    if (!state.unlockedSpecies.includes(opts.speciesArg as Species)) {
-      console.log(`✗ ${opts.speciesArg} 还没解锁。已解锁: ${state.unlockedSpecies.join(", ")}`);
+    if (!accessible.includes(opts.speciesArg as Species)) {
+      console.log(
+        `✗ ${opts.speciesArg} 还没解锁。${sponsor ? "" : "已解锁: " + accessible.join(", ")}`,
+      );
       return;
     }
     sp = opts.speciesArg as Species;
   } else {
-    const choices = state.unlockedSpecies.map((s) => {
+    const choices = accessible.map((s: Species) => {
       const pet = getPet(s);
       const entry = state.pets[s];
       const name = entry?.name ?? pet?.personality.defaultName ?? s;
