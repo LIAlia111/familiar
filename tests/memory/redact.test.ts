@@ -3,14 +3,16 @@ import { redact } from "../../src/memory/redact.js";
 
 describe("redact", () => {
   it("redacts Anthropic API keys", () => {
-    const out = redact("My key: sk-ant-api03-abcdefghij1234567890");
-    expect(out).not.toContain("sk-ant-api03");
+    // Test fixture — not a real key. Use clearly-fake pattern to avoid
+    // tripping GitHub Push Protection / secret scanners.
+    const out = redact("My key: sk-ant-NOT_REAL_TEST_FIXTURE_VALUE_xxxxx");
+    expect(out).not.toContain("sk-ant-NOT_REAL");
     expect(out).toContain("[REDACTED:anthropic-key]");
   });
 
   it("redacts GitHub tokens", () => {
-    const out = redact("token: ghp_abcdefghijklmnopqrstuvwxyz1234567890");
-    expect(out).not.toContain("ghp_abcdef");
+    const out = redact("token: ghp_NOT_REAL_TEST_FIXTURE_VALUE_xxxxx");
+    expect(out).not.toContain("ghp_NOT_REAL");
     expect(out).toContain("[REDACTED:github-token]");
   });
 
