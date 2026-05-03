@@ -5,6 +5,7 @@ import { speak } from "../brain/speak.js";
 import { DefaultBackend } from "../memory/default.js";
 import { decideTrigger, type HookEvent } from "./proactive.js";
 import { parseSessionInput } from "../util/claude-code.js";
+import { memoryDir } from "../util/paths.js";
 
 const DEFAULT_CHATTINESS = "normal" as const;
 
@@ -31,7 +32,7 @@ export async function runHook(event: HookEvent): Promise<void> {
   });
   if (!trigger) return;
 
-  const backend = new DefaultBackend({ cwd: session.cwd });
+  const backend = new DefaultBackend({ cwd: session.cwd, memoryDir: memoryDir() });
   const ctx = await backend.fetchContext();
 
   const line = await speak({

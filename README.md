@@ -122,6 +122,7 @@ Environment variables:
 
 - `FAMILIAR_HOME` — override the state directory (default: `~/.familiar`)
 - `FAMILIAR_MODEL` — override the Claude model used for personality replies (default: same model your Claude Code uses)
+- `FAMILIAR_MEMORY_DIR` — opt-in: a directory of `.md` files the pet reads to personalize replies (e.g. `~/.claude/projects/-/memory/`). Each file is redacted before being sent to the model. Default: disabled.
 
 ## Author
 

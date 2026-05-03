@@ -4,6 +4,7 @@ import { applyAction, type ActionKind } from "../state/affection.js";
 import { affectionLabel } from "../state/affection.js";
 import { speak } from "../brain/speak.js";
 import { DefaultBackend } from "../memory/default.js";
+import { memoryDir } from "../util/paths.js";
 import { resolveVariant, spriteWithPalette } from "../pets/variant-render.js";
 import { playAnimation } from "../render/animation.js";
 import type { TemplateKey } from "../pets/types.js";
@@ -45,7 +46,7 @@ export async function runInteraction(opts: InteractionOpts): Promise<void> {
     await playAnimation({ sprite: colored, finalFrameIndex: finalFrame, cycles: 2, frameDelayMs: 250 });
   }
 
-  const ctx = await new DefaultBackend({ cwd: opts.cwd }).fetchContext();
+  const ctx = await new DefaultBackend({ cwd: opts.cwd, memoryDir: memoryDir() }).fetchContext();
 
   const line = await speak({
     personality: pet.personality,
