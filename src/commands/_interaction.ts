@@ -17,8 +17,7 @@ export interface InteractionOpts {
   useApi?: boolean;
 }
 
-// Shared engine for /pet, /feed, /play. Centralizes the load → apply → speak
-// → save dance so each command file only declares what's different.
+// Shared engine for /pet, /feed, /play.
 export async function runInteraction(opts: InteractionOpts): Promise<void> {
   const state = loadState();
   if (!state) {
@@ -31,6 +30,13 @@ export async function runInteraction(opts: InteractionOpts): Promise<void> {
     console.log("active 宠物丢了。");
     return;
   }
+
+  // Apply action FIRST so cooldown + affection updates persist even if
+  // animation/speak/API fails downstream.
+  const result = applyAction(active, opts.kind);
+  active.totalInteractions += 1;
+  active.lastInteractionAt = new Date().toISOString();
+  saveState(state);
 
   if (opts.showAnimation) {
     const variant = resolveVariant(pet, active.variantId);
@@ -54,7 +60,6 @@ export async function runInteraction(opts: InteractionOpts): Promise<void> {
 
   console.log(`\n  ${active.name}: ${line}`);
 
-  const result = applyAction(active, opts.kind);
   if (result.onCooldown && !result.dailyBonusApplied) {
     console.log(`  （${cooldownMessage(opts.kind)}，等会再来吧 ♡）`);
   } else if (result.delta > 0) {
@@ -62,8 +67,9 @@ export async function runInteraction(opts: InteractionOpts): Promise<void> {
   }
   console.log(`  亲密度 ${active.affection}/100 · ${affectionLabel(active.affection)}`);
 
-  active.totalInteractions += 1;
-  active.lastInteractionAt = new Date().toISOString();
+  // Persist the new line — separate save from the early one so a speak failure
+  // doesn't lose cooldown progress (early save) but a successful speak still
+  // gets recorded.
   active.recentQuotes = [line, ...active.recentQuotes].slice(0, 10);
   saveState(state);
 }

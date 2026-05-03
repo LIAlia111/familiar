@@ -1,14 +1,9 @@
 import type { PetState, Species } from "./types.js";
+import { listAll } from "../pets/registry.js";
 
-const KNOWN_SPECIES: Species[] = [
-  "cat",
-  "capybara",
-  "dragon",
-  "ghost",
-  "octopus",
-  "panda",
-  "pig",
-];
+// Single source of truth: registry.listAll() — keeps in sync with the
+// actual registered pets, no parallel enum to maintain.
+const KNOWN_SPECIES: Species[] = listAll();
 
 const MAX_RECENT_QUOTES = 50;
 const MAX_AFFECTION = 100;

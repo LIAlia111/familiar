@@ -59,10 +59,3 @@ export interface PetStateV1 {
   };
 }
 
-export interface PetConfig {
-  schemaVersion: 1;
-  chattiness: Chattiness;
-  proactiveEnabled: boolean;
-  maxApiCallsPerHour: number;
-  premiumActivationKey?: string;
-}

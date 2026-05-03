@@ -19,7 +19,9 @@ export async function runActivateCommand(): Promise<void> {
 
   let token: string;
   try {
-    const result = await deviceAuth(GITHUB_CLIENT_ID, ["read:user"], (v) => {
+    // read:user is needed for viewer.login; read:org is needed for
+    // isViewerSponsor when the sponsorship is set to private (GitHub default).
+    const result = await deviceAuth(GITHUB_CLIENT_ID, ["read:user", "read:org"], (v) => {
       console.log(`  在浏览器打开: ${v.verification_uri}`);
       console.log(`  输入授权码:   ${v.user_code}\n`);
       console.log("  授权后回到这里 — 我会自动完成验证...\n");
@@ -46,11 +48,12 @@ export async function runActivateCommand(): Promise<void> {
   };
   saveState(state);
 
+  const viewer = result.viewerLogin ?? "(unknown)";
   if (result.isSponsor) {
-    console.log(`✓ 赞助身份已验证（GitHub @${result.viewerLogin} 赞助 @${SPONSOR_MAINTAINER}）`);
+    console.log(`✓ 赞助身份已验证（GitHub @${viewer} 赞助 @${SPONSOR_MAINTAINER}）`);
     console.log("  全部 7 只宠物 + 35 款皮肤已解锁 ♥\n");
   } else {
-    console.log(`  GitHub @${result.viewerLogin} 暂未赞助 @${SPONSOR_MAINTAINER}`);
+    console.log(`  GitHub @${viewer} 暂未赞助 @${SPONSOR_MAINTAINER}`);
     console.log(`  赞助页面：https://github.com/sponsors/${SPONSOR_MAINTAINER}`);
     console.log("  赞助后再次运行 familiar activate 即可解锁。\n");
   }
