@@ -8,9 +8,10 @@
 // Client ID is public — embedding it in source is fine. There is NO client
 // secret in device flow.
 //
-// Until the OAuth app is registered, set FAMILIAR_GITHUB_CLIENT_ID to override.
+// Forks should override via FAMILIAR_GITHUB_CLIENT_ID env var (also set
+// FAMILIAR_SPONSOR_TARGET to your own GitHub login).
 export const GITHUB_CLIENT_ID =
-  process.env.FAMILIAR_GITHUB_CLIENT_ID ?? "Iv1.placeholder-replace-me";
+  process.env.FAMILIAR_GITHUB_CLIENT_ID ?? "Ov23liB9dut0OQ6GZc2t";
 
 // Maintainer to check sponsorship against. Forks should override.
 export const SPONSOR_MAINTAINER =
