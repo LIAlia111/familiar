@@ -24,9 +24,18 @@ function main(): void {
 
   resolveVariant(pet, active.variantId);
   const icon = SPECIES_ICON[state.activeSpecies] ?? "🐾";
+  const last = active.recentQuotes[0];
+  // Cap the speech bubble so a long LLM-generated reply doesn't blow up
+  // the statusline width on narrow terminals.
+  const bubble = last ? `  💭 ${truncate(last, 40)}` : "";
   process.stdout.write(
-    `${icon} ${active.name} Lv.${active.affection}  ${heartBar(active.affection)} · ${affectionLabel(active.affection)}`,
+    `${icon} ${active.name} Lv.${active.affection}  ${heartBar(active.affection)} · ${affectionLabel(active.affection)}${bubble}`,
   );
+}
+
+function truncate(s: string, max: number): string {
+  if (s.length <= max) return s;
+  return `${s.slice(0, max - 1)}…`;
 }
 
 try {

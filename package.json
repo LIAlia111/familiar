@@ -1,6 +1,6 @@
 {
   "name": "claude-familiar",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A pixel-art pet companion for Claude Code CLI.",
   "keywords": [
     "claude-code",
