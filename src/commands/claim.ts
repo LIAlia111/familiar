@@ -8,7 +8,7 @@ import type { Species } from "../state/types.js";
 export async function runClaimCommand(): Promise<void> {
   const state = loadState();
   if (!state) {
-    console.log("familiar 还没装宠物 —— 运行：npx familiar install");
+    console.log("familiar 还没装宠物 —— 运行：npx claude-familiar install");
     return;
   }
 

@@ -10,7 +10,7 @@ export interface ActivateCodeOpts {
 export async function runActivateCodeCommand(opts: ActivateCodeOpts): Promise<void> {
   const state = loadState();
   if (!state) {
-    console.log("familiar 还没装宠物 —— 先运行：npx familiar install");
+    console.log("familiar 还没装宠物 —— 先运行：npx claude-familiar install");
     return;
   }
 

@@ -12,7 +12,7 @@ function heartBar(affection: number): string {
 function main(): void {
   const state = loadState();
   if (!state) {
-    process.stdout.write("[familiar not set up — run: npx familiar install]\n");
+    process.stdout.write("[familiar not set up — run: npx claude-familiar install]\n");
     return;
   }
   const active = getActivePet(state);

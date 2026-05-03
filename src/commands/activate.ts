@@ -7,7 +7,7 @@ import { GITHUB_CLIENT_ID, SPONSOR_MAINTAINER } from "../sponsor/config.js";
 export async function runActivateCommand(): Promise<void> {
   const state = loadState();
   if (!state) {
-    console.log("familiar 还没装宠物 —— 先运行：npx familiar install");
+    console.log("familiar 还没装宠物 —— 先运行：npx claude-familiar install");
     return;
   }
 

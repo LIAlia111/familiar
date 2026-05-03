@@ -5,7 +5,7 @@
 ## Install
 
 ```bash
-npx familiar install
+npx claude-familiar install
 ```
 
 You'll be asked to pick a starter pet and name them. Then restart Claude Code (or open a new session) and your pet appears in the statusline.
@@ -104,7 +104,7 @@ Your pet's mood updates based on Claude Code state — they react to errors, com
 ## Uninstall
 
 ```bash
-npx familiar uninstall
+npx claude-familiar uninstall
 ```
 
 This removes the statusline + hooks from your Claude Code settings. Pet state in `~/.familiar/` is preserved by default.
