@@ -2,8 +2,27 @@
   "name": "familiar",
   "version": "0.1.0",
   "description": "A pixel-art pet companion for Claude Code CLI.",
+  "keywords": [
+    "claude-code",
+    "claude",
+    "cli",
+    "pet",
+    "tamagotchi",
+    "pixel-art",
+    "statusline",
+    "ansi"
+  ],
   "license": "MIT",
   "author": "Lief <https://github.com/LIAlia111>",
+  "homepage": "https://github.com/LIAlia111/familiar#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LIAlia111/familiar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LIAlia111/familiar/issues"
+  },
+  "funding": "https://github.com/sponsors/LIAlia111",
   "type": "module",
   "bin": {
     "familiar": "./dist/cli/index.js",
