@@ -1,6 +1,6 @@
 {
   "name": "claude-familiar",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A pixel-art pet companion for Claude Code CLI.",
   "keywords": [
     "claude-code",
@@ -26,6 +26,7 @@
   "type": "module",
   "bin": {
     "familiar": "./dist/cli/index.js",
+    "claude-familiar": "./dist/cli/index.js",
     "familiar-statusline": "./dist/statusline/render.js"
   },
   "scripts": {
@@ -43,6 +44,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.40.0",
     "@inquirer/prompts": "^7.0.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@octokit/auth-oauth-device": "^8.0.3",
     "@octokit/graphql": "^9.0.3"
   },
