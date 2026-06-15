@@ -12,6 +12,7 @@ import { runActivateCodeCommand } from "../commands/activate-code.js";
 import { runInstall } from "./install.js";
 import { runUninstall } from "./uninstall.js";
 import { runHook } from "../hooks/handlers.js";
+import { runMcpServer } from "../mcp/server.js";
 import type { HookEvent } from "../hooks/proactive.js";
 import { loadState } from "../state/store.js";
 import { isSponsorActive } from "../sponsor/state.js";
@@ -67,6 +68,9 @@ async function main(): Promise<void> {
       break;
     case "activate-code":
       await runActivateCodeCommand({ codeArg: process.argv[3] });
+      break;
+    case "mcp":
+      await runMcpServer();
       break;
     case "hook": {
       const event = process.argv[3] as HookEvent;

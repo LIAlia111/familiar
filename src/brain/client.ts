@@ -98,10 +98,75 @@ async function callBrainApi(req: SpeakRequest): Promise<string> {
     .trim();
 }
 
+// Fallback to any OpenAI-compatible API when the primary brain fails.
+// Env vars:
+//   FAMILIAR_FALLBACK_API_KEY   — required to activate fallback
+//   FAMILIAR_FALLBACK_BASE_URL  — default: https://api.openai.com/v1
+//                                  DashScope: https://dashscope.aliyuncs.com/compatible-mode/v1
+//   FAMILIAR_FALLBACK_MODEL     — default: gpt-4o-mini  (DashScope: qwen-turbo)
+async function callBrainFallback(req: SpeakRequest): Promise<string> {
+  const apiKey = process.env.FAMILIAR_FALLBACK_API_KEY;
+  if (!apiKey) throw new Error("FAMILIAR_FALLBACK_API_KEY not set");
+
+  const baseUrl =
+    process.env.FAMILIAR_FALLBACK_BASE_URL ?? "https://api.openai.com/v1";
+  const model = process.env.FAMILIAR_FALLBACK_MODEL ?? "gpt-4o-mini";
+
+  const resp = await fetch(`${baseUrl}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: 80,
+      messages: [
+        { role: "system", content: req.personality.systemPrompt },
+        {
+          role: "user",
+          content: buildPrompt(req)
+            .slice(req.personality.systemPrompt.length)
+            .trim(),
+        },
+      ],
+    }),
+    signal: AbortSignal.timeout(15_000),
+  });
+
+  if (!resp.ok) {
+    const body = await resp.text();
+    throw new Error(
+      `fallback API error ${resp.status}: ${body.slice(0, 120)}`
+    );
+  }
+
+  type OAIResponse = { choices: Array<{ message: { content: string } }> };
+  const data = (await resp.json()) as OAIResponse;
+  const text = data.choices?.[0]?.message?.content?.trim() ?? "";
+  if (!text) throw new Error("fallback empty response");
+  return text;
+}
+
 export async function callBrain(req: SpeakRequest): Promise<string> {
   const mode = (process.env.FAMILIAR_BRAIN ?? "cli") as BrainMode;
-  if (mode === "cli") return callBrainCli(req);
-  if (mode === "api") return callBrainApi(req);
-  // "template" or unknown → throw so speak() falls back to canned lines.
-  throw new Error(`brain disabled (FAMILIAR_BRAIN=${mode})`);
+
+  // "template" explicitly disables the LLM — skip fallback too.
+  if (mode !== "cli" && mode !== "api") {
+    throw new Error(`brain disabled (FAMILIAR_BRAIN=${mode})`);
+  }
+
+  try {
+    return await (mode === "cli" ? callBrainCli(req) : callBrainApi(req));
+  } catch (primaryErr) {
+    // If a fallback key is configured, try an OpenAI-compatible provider.
+    if (process.env.FAMILIAR_FALLBACK_API_KEY) {
+      try {
+        return await callBrainFallback(req);
+      } catch {
+        // Both failed — fall through and throw the original error.
+      }
+    }
+    throw primaryErr;
+  }
 }

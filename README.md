@@ -26,6 +26,22 @@ Other Claude Code pet projects either require [Kitty graphics protocol](https://
 - Has **persistent memory** — reads `CLAUDE.md` and `~/.claude/projects/-/memory/` so the pet knows your project
 - **Open-core**: 2 free pets + premium pet pack via sponsorship
 
+## familiar vs OpenClaw
+
+[OpenClaw](https://github.com/OpenClaw) is a powerful self-hosted agent framework (247K+ stars). It's infrastructure — you deploy it, maintain it, route tasks through it.
+
+`familiar` is the opposite end of the spectrum:
+
+| | familiar | OpenClaw |
+|---|---|---|
+| What it is | Companion living in your statusline | Self-hosted agent orchestration framework |
+| Setup | `npx claude-familiar install` (30 seconds) | Docker / self-hosted server |
+| API key | None — uses your existing Claude Code login | Requires separate API configuration |
+| Purpose | Emotional layer: personality, memory, presence | Workflow layer: task routing, agent pipelines |
+| Overhead | ~0 — runs inside Claude Code | Separate process / server |
+
+**tl;dr** — If you want to build agent pipelines, use OpenClaw. If you want a companion that knows your project and greets you in the statusline, use `familiar`. They don't compete; some people use both.
+
 ## Requirements
 
 - [Claude Code CLI](https://docs.anthropic.com/claude/claude-code) installed and signed in
@@ -105,6 +121,72 @@ Your pet's affection grows from `0` (陌生) to `100` (灵魂伴侣) based on ho
 - 24h no interaction — `-2` (gentle decay)
 
 Your pet's mood updates based on Claude Code state — they react to errors, completions, rate limits, and idle time.
+
+## MCP Server
+
+`familiar` ships a built-in [MCP](https://modelcontextprotocol.io/) server so Claude Code (and any MCP-compatible client) can query and interact with your pet programmatically.
+
+### Setup
+
+Add to your `~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "familiar": {
+      "type": "stdio",
+      "command": "familiar",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+Then restart Claude Code. The server starts on-demand over stdio — no daemon, no ports.
+
+### Available tools
+
+| Tool | Description |
+| --- | --- |
+| `familiar_status` | Get pet name, species, affection (0–100), mood, last interaction |
+| `familiar_speak` | Ask the pet to say something (personality-driven, LLM or template) |
+| `familiar_interact` | Pet / feed / play — raises affection, respects cooldowns |
+| `familiar_remember` | Persist a free-text memory note to `~/.familiar/memory.json` |
+
+### Example
+
+Once connected, Claude Code can call:
+
+```
+familiar_status → { "name": "Mochi", "affection": 72, "relationship": "挚友", ... }
+familiar_speak  → "Mochi: 今天终于做完了，不容易。"
+```
+
+### Use alongside AWS Bedrock MCP
+
+`familiar` plays nicely with other MCP servers. Run it next to AWS Labs' [`bedrock-kb-retrieval-mcp-server`](https://github.com/awslabs/mcp/tree/main/src/bedrock-kb-retrieval-mcp-server) to keep your pet on the statusline while Claude Code queries a Bedrock-backed knowledge base:
+
+```json
+{
+  "mcpServers": {
+    "familiar": {
+      "type": "stdio",
+      "command": "familiar",
+      "args": ["mcp"]
+    },
+    "awslabs.bedrock-kb-retrieval-mcp-server": {
+      "command": "uvx",
+      "args": ["awslabs.bedrock-kb-retrieval-mcp-server@latest"],
+      "env": {
+        "AWS_PROFILE": "your-profile-name",
+        "AWS_REGION": "us-east-1"
+      }
+    }
+  }
+}
+```
+
+The same pattern works for other Bedrock servers (`bedrock-agentcore-mcp-server`, `aws-bedrock-custom-model-import-mcp-server`) — your pet stays put while AWS tools land in the same chat session.
 
 ## Uninstall
 

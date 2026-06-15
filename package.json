@@ -1,7 +1,8 @@
 {
   "name": "claude-familiar",
-  "version": "0.3.4",
-  "description": "A pixel-art pet companion for Claude Code CLI.",
+  "version": "0.3.5",
+  "mcpName": "io.github.LIAlia111/familiar",
+  "description": "A pixel-art pet companion for Claude Code CLI with MCP server support.",
   "keywords": [
     "claude-code",
     "claude",
