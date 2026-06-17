@@ -210,6 +210,20 @@ Environment variables:
   - `api` — call the Anthropic SDK directly using `ANTHROPIC_API_KEY`.
   - `template` — disable the LLM entirely; pet always falls back to its hand-written lines.
 
+## Privacy & Independence
+
+> **tl;dr** — familiar has no backend. Your code, your conversations, and your pet data never leave your machine.
+
+Unlike cloud-based AI companions or code tools that silently route your content through external servers:
+
+- **No remote backend, no analytics.** familiar doesn't phone home. There is no familiar server. Check the source — it's all on GitHub.
+- **Personality runs on your own Claude Code session.** When your pet replies, it spawns `claude -p` using your existing signed-in account. No separate API key, no familiar-owned endpoint — the same model, the same account, the same privacy guarantees you already have with Claude Code.
+- **Pet state is local only.** Everything lives in `~/.familiar/` on your machine. Nothing is synced anywhere, no profile is created, no usage data is transmitted.
+- **Memory is opt-in and stays local.** `FAMILIAR_MEMORY_DIR` is disabled by default. If you enable it, your `.md` files are read locally and redacted before being included in a prompt — they go to the same model you're already using, never to a familiar server (there isn't one).
+- **Open source, auditable.** The entire codebase is on [GitHub](https://github.com/LIAlia111/familiar). You can read exactly what runs when you install it.
+
+**Why this matters:** Some AI coding tools have been found to silently route project files to remote servers without clear consent. familiar was built on the opposite principle — it adds personality and presence without adding any new trust surface. If you already trust Claude Code, you already trust familiar.
+
 ## Author
 
 Built by [Lief](https://github.com/LIAlia111).
