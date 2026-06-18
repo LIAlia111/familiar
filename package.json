@@ -60,5 +60,10 @@
     "dist",
     "README.md",
     "LICENSE"
-  ]
+  ],
+  "overrides": {
+    "form-data": "^4.0.6",
+    "hono": "^4.12.25",
+    "qs": "^6.15.2"
+  }
 }
