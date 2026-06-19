@@ -17,6 +17,10 @@ You'll be asked to pick a starter pet and name them. Then restart Claude Code (o
 
 If familiar makes your sessions better, a ⭐ on [GitHub](https://github.com/LIAlia111/familiar) helps others find it.
 
+## The story
+
+I built familiar while developing [JARVIS](https://jarvis.liaolief.com) — my personal AI assistant system running 6 Claude Code sessions, 30+ hooks, and 100+ skills. After months of solo sessions, I wanted something that *acknowledged* the work, not just executed it. The first version was a three-line statusline hack. It grew into this.
+
 ## Why familiar?
 
 Other Claude Code pet projects either require [Kitty graphics protocol](https://sw.kovidgoyal.net/kitty/graphics-protocol/) (excluding most terminals) or stay text-only without real personality.
