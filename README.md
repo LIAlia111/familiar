@@ -28,7 +28,7 @@ Other Claude Code pet projects either require [Kitty graphics protocol](https://
 
 ## familiar vs OpenClaw
 
-[OpenClaw](https://github.com/OpenClaw) is a powerful self-hosted agent framework (247K+ stars). It's infrastructure — you deploy it, maintain it, route tasks through it.
+[OpenClaw](https://github.com/OpenClaw) is a powerful self-hosted agent framework. It's infrastructure — you deploy it, maintain it, route tasks through it.
 
 `familiar` is the opposite end of the spectrum:
 
