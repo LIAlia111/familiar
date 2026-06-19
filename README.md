@@ -2,6 +2,8 @@
 
 > A pixel-art pet companion for [Claude Code](https://docs.anthropic.com/claude/claude-code) CLI. Lives in your statusline. Reacts to your sessions. Grows with you.
 
+> Running in production inside [JARVIS](https://jarvis.liaolief.com) — a real AI assistant system with 6 Claude Code sessions, 100+ skills, and 1600+ memory files.
+
 [![npm version](https://img.shields.io/npm/v/claude-familiar.svg)](https://www.npmjs.com/package/claude-familiar)
 [![npm downloads](https://img.shields.io/npm/dw/claude-familiar.svg)](https://www.npmjs.com/package/claude-familiar)
 [![license](https://img.shields.io/npm/l/claude-familiar.svg)](./LICENSE)
