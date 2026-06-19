@@ -13,7 +13,9 @@
 npx claude-familiar install
 ```
 
-You'll be asked to pick a starter pet and name them. Then restart Claude Code (or open a new session) and your pet appears in the statusline.
+You'll be asked to pick a starter pet and name them. Then restart Claude Code (or open a new session) and your pet appears in the statusline — alive, opinionated, and already reading your `CLAUDE.md`.
+
+If familiar makes your sessions better, a ⭐ on [GitHub](https://github.com/LIAlia111/familiar) helps others find it.
 
 ## Why familiar?
 
