@@ -232,7 +232,7 @@ Unlike cloud-based AI companions or code tools that silently route your content 
 
 ## Author
 
-Built by [Lief](https://github.com/LIAlia111).
+Built by [Lief](https://github.com/LIAlia111) · [Portfolio](https://lief.liaolief.com) · made while building [JARVIS](https://jarvis.liaolief.com)
 
 ## License
 
